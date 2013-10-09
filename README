@@ -56,6 +56,7 @@ COMMANDS                Parameters            Explanation
  -d, --decrypt          File-in File-out      Decrypt/dump SCE file.
  -e, --encrypt          File-in File-out      Encrypt/create SCE file.
 OPTIONS                 Possible Values       Explanation
+ -p, --data-path        path/of/the/data      Define the path of the data dir
  -v, --verbose                                Enable verbose output.
  -r, --raw                                    Enable raw value output.
  -t, --template         File-in               Template file (SELF only)
@@ -84,6 +85,8 @@ OPTIONS                 Possible Values       Explanation
  -j, --np-add-sig       TRUE/FALSE(default)   Whether to add a NP sig. or not.
 
 ==> History <==
+Version 0.3.0
+ - Added option to specify the data path
 Version 0.2.9
  - Plaintext sections will now take less space in metadata header keys array.
  - Added option to specifiy a template SELF to take configuration values from.

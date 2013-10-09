@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 CFLAGS=-g -O0 -Wall
 OS_TARGET=scetool
 LDFLAGS=-lz
@@ -34,7 +34,7 @@ $(OS_TARGET): $(OBJS)
 
 clean:
 	@printf "\033[K\033[0;32mCleaning\033[1;32m\033[0;32m...\033[0m\n"
-	rm -rf *.o $(OS_TARGET)
+	rm -rf *.o $(OS_TARGET) *~
 
 install:
 	@printf "\033[K\033[0;32mInstalling\033[1;32m\033[0;32m...\033[0m\n"

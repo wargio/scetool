@@ -77,6 +77,8 @@ s8 *_klicensee = NULL;
 s8 *_real_fname = NULL;
 s8 *_add_sig = NULL;
 
+static s8 *_data_path = NULL;
+
 /*! Input file. */
 static s8 *_file_in = NULL;
 /*! Ouput file. */
@@ -115,6 +117,7 @@ static struct option options[] =
 	{"print-infos", ARG_REQ, NULL, 'i'},
 	{"decrypt", ARG_REQ, NULL, 'd'},
 	{"encrypt", ARG_REQ, NULL, 'e'},
+	{"data-path", ARG_REQ, NULL, 'p'},
 	{"verbose", ARG_NONE, NULL, 'v'},
 	{"raw", ARG_NONE, NULL, 'r'},
 	{"template", ARG_REQ, NULL, VAL_TEMPLATE},
@@ -165,6 +168,7 @@ static void print_usage()
 	printf(" -d, --decrypt          File-in File-out      Decrypt/dump SCE file.\n");
 	printf(" -e, --encrypt          File-in File-out      Encrypt/create SCE file.\n");
 	printf("OPTIONS                 Possible Values       Explanation\n");
+	printf(" -p, --data-path        path/of/the/data      Define the path of the data dir\n");
 	printf(" -v, --verbose                                Enable verbose output.\n");
 	printf(" -r, --raw                                    Enable raw value output.\n");
 	printf(" -t, --template         File-in               Template file (SELF only)\n");
@@ -204,9 +208,9 @@ static void parse_args(int argc, char **argv)
 	char c;
 
 #ifdef CONFIG_CUSTOM_INDIV_SEED
-	while((c = getopt_long(argc, argv, "hki:d:e:vrt:0:1:s:2:m:K:3:4:5:A:6:7:8:9:a:b:c:f:l:g:j:", options, NULL)) != -1)
+	while((c = getopt_long(argc, argv, "hki:d:e:p:vrt:0:1:s:2:m:K:3:4:5:A:6:7:8:9:a:b:c:f:l:g:j:", options, NULL)) != -1)
 #else
-	while((c = getopt_long(argc, argv, "hki:d:e:vrt:0:1:s:2:m:K:3:4:5:A:6:7:8:9:b:c:f:l:g:j:", options, NULL)) != -1)
+	while((c = getopt_long(argc, argv, "hki:d:e:p:vrt:0:1:s:2:m:K:3:4:5:A:6:7:8:9:b:c:f:l:g:j:", options, NULL)) != -1)
 #endif
 	{
 		switch(c)
@@ -240,6 +244,9 @@ static void parse_args(int argc, char **argv)
 			_file_in = optarg;
 			//Need more args.
 			goto get_args;
+			break;
+		case 'p':
+			_data_path = optarg;
 			break;
 		case 'v':
 			_verbose = TRUE;
@@ -366,14 +373,14 @@ int main(int argc, char **argv)
 
 	print_version();
 	printf("\n");
-
 	//Try to get path from env:PS3.
-	if((ps3 = getenv(CONFIG_ENV_PS3)) != NULL)
+	if(_data_path == NULL && (ps3 = getenv(CONFIG_ENV_PS3)) != NULL)
 		if(access(ps3, 0) != 0)
 			ps3 = NULL;
-
 	//Load keysets.
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s", _data_path, CONFIG_KEYS_FILE);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_KEYS_FILE);
 		if(access(path, 0) != 0)
@@ -381,9 +388,10 @@ int main(int argc, char **argv)
 	}
 	else
 		sprintf(path, "%s/%s", CONFIG_KEYS_PATH, CONFIG_KEYS_FILE);
+
 	if(keys_load(path) == TRUE)
 		_LOG_VERBOSE("Loaded keysets.\n");
-	else
+	else 
 	{
 		if(_list_keys == TRUE)
 		{
@@ -395,7 +403,9 @@ int main(int argc, char **argv)
 	}
 
 	//Load curves.
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s", _data_path, CONFIG_CURVES_FILE);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_CURVES_FILE);
 		if(access(path, 0) != 0)
@@ -408,8 +418,10 @@ int main(int argc, char **argv)
 	else
 		printf("[*] Warning: Could not load loader curves.\n");
 
-	//Load curves.
-	if(ps3 != NULL)
+	//Load vsh curves.
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s", _data_path, CONFIG_VSH_CURVES_FILE);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_VSH_CURVES_FILE);
 		if(access(path, 0) != 0)
