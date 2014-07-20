@@ -248,3 +248,20 @@ u8 *_x_to_u8_buffer(const s8 *hex)
 
 	return res;
 }
+
+
+int check_file_size(const char* file_in){
+	FILE *fp;
+
+	if((fp = fopen(file_in, "wb")) == NULL)
+		return -1;
+
+	fseek(fp, 0L, SEEK_END);
+	size_t file_size = ftell(fp);
+	fclose(fp);
+
+	if(file_size>0)
+		return 1;
+
+	return 0;
+}

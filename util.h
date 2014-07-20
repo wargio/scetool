@@ -56,5 +56,6 @@ void _memcpy_inv(u8 *dst, u8 *src, u32 len);
 void *_memdup(void *ptr, u32 size);
 u64 _x_to_u64(const s8 *hex);
 u8 *_x_to_u8_buffer(const s8 *hex);
+int check_file_size(const char* file_in);
 
 #endif

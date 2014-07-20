@@ -45,6 +45,8 @@ list_t *_keysets;
 curve_t *_curves;
 /*! Loaded VSH curves. */
 vsh_curve_t *_vsh_curves;
+/*! Load /data path. */
+extern s8 *_data_path = NULL;
 
 static u8 rap_init_key[0x10] = 
 {
@@ -457,7 +459,9 @@ static u8 *idps_load()
 		if(access(ps3, 0) != 0)
 			ps3 = NULL;
 
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/idps", _data_path, CONFIG_IDPS_FILE);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_IDPS_FILE);
 		if(access(path, 0) != 0)
@@ -490,7 +494,9 @@ static act_dat_t *act_dat_load()
 		if(access(ps3, 0) != 0)
 			ps3 = NULL;
 
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s", _data_path, CONFIG_ACT_DAT_FILE);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_ACT_DAT_FILE);
 		if(access(path, 0) != 0)
@@ -523,12 +529,15 @@ static rif_t *rif_load(const s8 *content_id)
 		if(access(ps3, 0) != 0)
 			ps3 = NULL;
 
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s%s", _data_path, content_id, CONFIG_RAP_FILE_EXT);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s%s", ps3, content_id, CONFIG_RIF_FILE_EXT);
 		if(access(path, 0) != 0)
 			sprintf(path, "%s/%s%s", CONFIG_RIF_PATH, content_id, CONFIG_RIF_FILE_EXT);
 	}
+
 	else
 		sprintf(path, "%s/%s%s", CONFIG_RIF_PATH, content_id, CONFIG_RIF_FILE_EXT);
 
@@ -555,7 +564,9 @@ static u8 *rap_load(const s8 *content_id)
 		if(access(ps3, 0) != 0)
 			ps3 = NULL;
 
-	if(ps3 != NULL)
+	if(_data_path != NULL)
+		sprintf(path, "%s/%s%s", _data_path, content_id, CONFIG_RAP_FILE_EXT);
+	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s%s", ps3, content_id, CONFIG_RAP_FILE_EXT);
 		if(access(path, 0) != 0)

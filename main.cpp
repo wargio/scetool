@@ -373,6 +373,7 @@ int main(int argc, char **argv)
 
 	print_version();
 	printf("\n");
+
 	//Try to get path from env:PS3.
 	if(_data_path == NULL && (ps3 = getenv(CONFIG_ENV_PS3)) != NULL)
 		if(access(ps3, 0) != 0)
@@ -445,6 +446,19 @@ int main(int argc, char **argv)
 		np_set_klicensee(_x_to_u8_buffer(_klicensee));
 	}
 
+
+	int check = check_file_size(_file_in);
+	//Checking if ZERO bytes
+	if(check <= 0)
+	{
+		if(check == 0)
+			printf("[*] Error: file size is null.\n");
+		else if(check < 0)
+			printf("[*] Error: cannot open file.\n");
+		else 
+			printf("[*] Error: unknown error (%d).\n", check);
+		return FALSE;
+	}
 	if(_list_keys == TRUE)
 	{
 		printf("[*] Loaded keysets:\n");
