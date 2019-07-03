@@ -253,7 +253,7 @@ u8 *_x_to_u8_buffer(const s8 *hex)
 int check_file_size(const char* file_in){
 	FILE *fp;
 
-	if((fp = fopen(file_in, "wb")) == NULL)
+	if((fp = fopen(file_in, "rb")) == NULL)
 		return -1;
 
 	fseek(fp, 0L, SEEK_END);
