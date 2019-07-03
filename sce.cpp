@@ -26,7 +26,6 @@
 void _print_sce_header(FILE *fp, sce_header_t *h)
 {
 	const s8 *name;
-	const s8 *key_revision;
 
 	fprintf(fp, "[*] SCE Header:\n");
 	fprintf(fp, " Magic           0x%08X [%s]\n", h->magic, (h->magic == SCE_HEADER_MAGIC ? "OK" : "ERROR"));
@@ -175,7 +174,7 @@ sce_buffer_ctxt_t *sce_create_ctxt_from_buffer(u8 *scebuffer)
 			res->self.si = (section_info_t *)(res->scebuffer + res->self.selfh->section_info_offset);
 
 			//SCE version.
-			if(res->self.selfh->sce_version_offset != NULL)
+			if(res->self.selfh->sce_version_offset != 0)
 			{
 				res->self.sv = (sce_version_t *)(res->scebuffer + res->self.selfh->sce_version_offset);
 				_es_sce_version(res->self.sv);
@@ -320,7 +319,7 @@ void sce_compress_data(sce_buffer_ctxt_t *ctxt)
 				else
 				{
 					free(buf);
-					_LOG_VERBOSE("Skipped compression of section %03d (0x%08X >= 0x%08X)\n", i, size_comp, sec->size);
+					_LOG_VERBOSE("Skipped compression of section %03d (0x%08lX >= 0x%08X)\n", i, size_comp, sec->size);
 				}
 			}
 			else
@@ -844,7 +843,7 @@ BOOL sce_decrypt_header(sce_buffer_ctxt_t *ctxt, u8 *metadata_info, u8 *keyset)
 	else
 	{
 		//Copy provided metadata info over SELF metadata.
-		memcpy((u8 *)ctxt->metai, metadata_info, sizeof(metadata_info));
+		memcpy((u8 *)ctxt->metai, metadata_info, sizeof(metadata_info_t));
 	}
 
 	if(ctxt->metai->key_pad[0] != 0x00 || ctxt->metai->iv_pad[0] != 0x00)
@@ -957,7 +956,7 @@ s8 *sce_version_to_str(u64 version)
 
 u64 sce_str_to_version(s8 *version)
 {
-	u16 h, l;
+	u32 h, l;
 	sscanf(version, "%02X.%02X", &h, &l);
 	return ((u64)(h << 16 | l)) << 32;
 }

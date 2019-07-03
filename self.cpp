@@ -1008,9 +1008,9 @@ static BOOL _build_self_64(sce_buffer_ctxt_t *ctxt, self_config_t *sconf)
 		{
 			const s8 *name = _get_name(_ph_types, phdrs[i].p_type);
 			if(name != NULL)
-				_LOG_VERBOSE("Skipped program header %-8s @ 0x%08X (0x%08X)\n", name, phdrs[i].p_offset, phdrs[i].p_filesz);
+				_LOG_VERBOSE("Skipped program header %-8s @ 0x%08llX (0x%08llX)\n", name, phdrs[i].p_offset, phdrs[i].p_filesz);
 			else
-				_LOG_VERBOSE("Skipped program header 0x%08X @ 0x%08X (0x%08X)\n", phdrs[i].p_type, phdrs[i].p_offset, phdrs[i].p_filesz);
+				_LOG_VERBOSE("Skipped program header 0x%08X @ 0x%08llX (0x%08llX)\n", phdrs[i].p_type, phdrs[i].p_offset, phdrs[i].p_filesz);
 			skip++;
 		}
 		else

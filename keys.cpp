@@ -46,7 +46,7 @@ curve_t *_curves;
 /*! Loaded VSH curves. */
 vsh_curve_t *_vsh_curves;
 /*! Load /data path. */
-extern s8 *_data_path = NULL;
+extern s8 *_data_path;
 
 static u8 rap_init_key[0x10] = 
 {
@@ -451,7 +451,7 @@ curve_t *vsh_curve_find(u8 ctype)
 
 static u8 *idps_load()
 {
-	s8 *ps3 = NULL, path[256];
+	s8 *ps3 = NULL, path[1024];
 	u8 *idps;
 	u32 len = 0;
 
@@ -460,7 +460,7 @@ static u8 *idps_load()
 			ps3 = NULL;
 
 	if(_data_path != NULL)
-		sprintf(path, "%s/idps", _data_path, CONFIG_IDPS_FILE);
+		snprintf(path, sizeof(path) - 1, "%s/%s", _data_path, CONFIG_IDPS_FILE);
 	else if(ps3 != NULL)
 	{
 		sprintf(path, "%s/%s", ps3, CONFIG_IDPS_FILE);

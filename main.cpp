@@ -77,7 +77,7 @@ s8 *_klicensee = NULL;
 s8 *_real_fname = NULL;
 s8 *_add_sig = NULL;
 
-static s8 *_data_path = NULL;
+s8 *_data_path = NULL;
 
 /*! Input file. */
 static s8 *_file_in = NULL;
